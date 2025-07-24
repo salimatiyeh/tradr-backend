@@ -17,22 +17,41 @@ Devise.setup do |config|
   # config.secret_key = 'c5f46cd08479d9446d542c11f0c90a46b21c5322076f9c1504510c80af967058c8b5c0e464914dd6dae78cb6e26017a0d3b5f3cde66a6950da2da4c98cd876a2'
   require 'devise/jwt'
 
+  config.skip_session_storage = [:http_auth, :params_auth]
 
+
+
+  # config.jwt do |jwt|
+  #   jwt.secret = Rails.application.secret_key_base
+  #   jwt.revocation_strategy = Devise::JWT::RevocationStrategies::Null
+
+  #   jwt.dispatch_requests = [
+  #     ['POST', %r{^/users/sign_in$}]
+  #   ]
+
+  #   jwt.revocation_requests = [
+  #     ['DELETE', %r{^/users/sign_out$}]
+  #   ]
+
+  #   jwt.expiration_time = 1.day.to_i
+  # end
 
 
   config.jwt do |jwt|
     jwt.secret = Rails.application.secret_key_base
-    # jwt.revocation_strategy = User
-
     jwt.dispatch_requests = [
       ['POST', %r{^/users/sign_in$}]
     ]
-
     jwt.revocation_requests = [
       ['DELETE', %r{^/users/sign_out$}]
     ]
-
     jwt.expiration_time = 1.day.to_i
+  end
+
+
+
+  config.warden do |manager|
+    manager.failure_app = Users::DeviseCustomFailure
   end
 
 
