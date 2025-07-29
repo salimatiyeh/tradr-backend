@@ -2,7 +2,7 @@ class ListingsController < ApplicationController
   include Pundit
 
   before_action :authenticate_user!
-  before_action :set_listing, only: [:update, :destroy]
+  before_action :set_listing, only: [:show, :update, :destroy]
 
   def create
     @listing = current_user.listings.build(listing_params)
@@ -18,6 +18,10 @@ class ListingsController < ApplicationController
   def index
     @listings = policy_scope(Listing)
     render json: @listings
+  end
+
+  def show
+    render json: @listing
   end
 
   def update
